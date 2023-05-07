@@ -1,0 +1,303 @@
+<template>
+  <v-dialog scrollable ref="detailDlg" v-model="dialog" max-width="850">
+    <v-card v-if="artikel">
+      <v-toolbar color="primary" dark flat>
+        <v-col cols="2"></v-col>
+        <v-col class="d-flex justify-space-around">
+          <v-toolbar-title class="white--text">Detil Artikel</v-toolbar-title>
+        </v-col>
+        <v-col cols="2" class="d-flex justify-end"></v-col>
+      </v-toolbar>
+      <v-card-title class="title black--text font-weight-bold mb-0 pb-0">{{
+        pVal(artikel, "judul")
+      }}</v-card-title>
+      <v-card-subtitle
+        v-if="artikel.userupdate"
+        class="caption my-0 py-0"
+        style="text-decoration: underline;"
+        >Terakhir diedit oleh {{ pVal(artikel.userupdate, "name") }} pada
+        {{ pVal(artikel, "updated_at") | toDT }} WIB</v-card-subtitle
+      >
+      <v-card-text class="pb-0 mb-0">
+        <v-row>
+          <v-col cols="12" class="text-left py-0">
+            <v-row>
+              <v-col cols="12">
+                <p class="caption my-2">
+                  Sumber:
+                  <span class="black--text">{{
+                    pVal(artikel, "sumber_penulis") | toTitleCase
+                  }}</span
+                  >,
+                  <span class="black--text">{{
+                    pVal(artikel, "created_at") | toDT
+                  }}</span>
+                </p>
+                <p>
+                  <span>
+                    <v-icon color="red">mdi-cards-heart</v-icon>
+                    Disukai {{ artikel.suka }}x
+                  </span>
+                  &nbsp;
+                  <span>
+                    <v-icon color="blue">mdi-eye</v-icon>
+                    Dilihat {{ artikel.lihat }}x
+                  </span>
+                </p>
+              </v-col>
+              <v-col cols="12">
+                <v-img
+                  position="bottom center"
+                  contain
+                  :src="
+                    artikel.cover
+                      ? artikel.cover.new_url.medium
+                      : 'https://cdn.siap.id/s3/simpkb/asset%20img/Guru-Berbagi/revisi-portal/thumb-default.jpg'
+                  "
+                  lazy-src="https://cdn.siap.id/s3/simpkb/asset%20img/Guru-Berbagi/revisi-portal/thumb-default.jpg"
+                />
+                <span
+                  >Sumber Ilustrasi :
+                  {{ pVal(artikel.cover, "sumber_file") }}</span
+                >
+                <br />
+                <br />
+                <v-row v-if="artikel.mapel.length == 3">
+                  <v-col
+                    class="py-1 font-weight-bold"
+                    cols="12"
+                    sm="12"
+                    md="3"
+                    lg="3"
+                    >Jenjang:</v-col
+                  >
+                  <v-col class="py-1" cols="12" sm="12" md="9" lg="9">
+                    {{ pVal(artikel.mapel[0].term, "nama") }}</v-col
+                  >
+                  <v-col
+                    class="py-1 font-weight-bold"
+                    cols="12"
+                    sm="12"
+                    md="3"
+                    lg="3"
+                    >Kelas:</v-col
+                  >
+                  <v-col class="py-1" cols="12" sm="12" md="9" lg="9">
+                    {{ pVal(artikel.mapel[1].term, "nama") }}</v-col
+                  >
+                  <v-col
+                    class="py-1 font-weight-bold"
+                    cols="12"
+                    sm="12"
+                    md="3"
+                    lg="3"
+                    >Mata Pelajaran:</v-col
+                  >
+                  <v-col class="py-1" cols="12" sm="12" md="9" lg="9">
+                    {{ pVal(artikel.mapel[2].term, "nama") }}</v-col
+                  >
+                  <v-col
+                    class="py-1 font-weight-bold"
+                    cols="12"
+                    sm="12"
+                    md="3"
+                    lg="3"
+                    >RPP Terkait:</v-col
+                  >
+                  <v-col class="py-1" cols="12" sm="12" md="9" lg="9">
+                    <a
+                      target="_blank"
+                      :href="artikel.rpp ? artikel.rpp.link : ''"
+                      >{{ artikel.rpp ? artikel.rpp.judul : "-" }}</a
+                    >
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col
+                    class="py-1 font-weight-bold"
+                    cols="12"
+                    sm="12"
+                    md="3"
+                    lg="3"
+                    >Kategori</v-col
+                  >
+                  <v-col class="py-1" cols="12" sm="12" md="9" lg="9">
+                    <span>{{ pVal(artikel, "jenis") | toTitleCase }}</span>
+                  </v-col>
+                  <v-col
+                    class="py-1 font-weight-bold"
+                    cols="12"
+                    sm="12"
+                    md="3"
+                    lg="3"
+                  >
+                    Status Plagiarisme:
+                  </v-col>
+                  <v-col class="py-1" cols="12" sm="12" md="9" lg="9">
+                    <span
+                      class="error--text"
+                      v-if="
+                        artikel.statuskurasiplagiat &&
+                          artikel.statuskurasiplagiat.post_plagiat_id == 2
+                      "
+                    >
+                      <v-icon small color="red">mdi-close</v-icon>Plagiat
+                    </span>
+                    <span
+                      class="success--text"
+                      v-else-if="
+                        artikel.statuskurasiplagiat &&
+                          artikel.statuskurasiplagiat.post_plagiat_id == 1
+                      "
+                    >
+                      <v-icon small color="success">mdi-check</v-icon>Lulus
+                      Plagiat
+                    </span>
+                    <span class="info--text" v-else>
+                      <v-icon small color="info">mdi-file-check</v-icon>Belum
+                      dikurasi Plagiarisme
+                    </span>
+                  </v-col>
+                  <v-col
+                    class="py-1 font-weight-bold"
+                    cols="12"
+                    sm="12"
+                    md="3"
+                    lg="3"
+                  >
+                    Keterangan Plagiarisme:
+                  </v-col>
+                  <v-col class="py-1" cols="12" sm="12" md="9" lg="9">
+                    {{
+                      artikel.statuskurasiplagiat
+                        ? artikel.statuskurasiplagiat.keterangan
+                        : ""
+                    }}</v-col
+                  >
+                </v-row>
+              </v-col>
+              <v-col cols="12">
+                <span class="font-weight-bold">Konten</span>
+                <div v-html="konten"></div>
+              </v-col>
+              <v-col cols="12">
+                <v-chip
+                  v-for="tag in artikel.tags"
+                  :key="tag.index"
+                  class="mr-2 mt-1"
+                  color="grey lighten-1"
+                  label
+                  small
+                  >#{{ pVal(tag, "nama") }}</v-chip
+                >
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions class="ma-2">
+        <v-spacer></v-spacer>
+        <v-btn @click="dialog = false" text class="black--text mr-1">
+          Tutup
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+<script>
+export default {
+  components: {},
+  data() {
+    return {
+      dialog: false,
+      artikel: null,
+      items: [],
+      page: null,
+      cp: 1
+    };
+  },
+  computed: {
+    konten() {
+      return this.artikel && this.artikel.deskripsi
+        ? this.artikel.deskripsi.replace(/<br>\\*/g, "</p><p>")
+        : "";
+    }
+  },
+  methods: {
+    // eslint-disable-next-line
+    open(obj) {
+      this.artikel = { ...obj };
+      this.dialog = true;
+    },
+    show(item) {
+      window.open(item.file.url, "_blank");
+    },
+    setujui(item) {
+      this.$successDlg(
+        `Apakah Anda yakin akan menyetujui data presensi ini?<br>
+        <div class="mt-2 title grow text-center">
+        </div>
+      `
+      )
+        .then(() => {
+          item.keterangan = "Data Presensi disetujui";
+          item.k_status = 5;
+        })
+        .then(() => {
+          return this.$store.dispatch("artikel/approve", {
+            presensi_manual_id: item.presensi_manual_id,
+            organisasi_id: item.organisasi.no_reg,
+            obj: item
+          });
+        })
+        .then(res => {
+          this.$refs.dlg.resolve();
+          return res;
+        })
+        .catch(e => e);
+    },
+    tolak(item) {
+      this.$confirm(
+        `Apakah Anda yakin akan menolak data presensi ini ?<br>
+        <div class="mt-2 title grow text-center">
+        </div>
+      `,
+        {
+          keterangan: {
+            label: "Silakan Tulis Alasan Tolak Presensi di Sini"
+          }
+        },
+        "Tolak Presensi Manual"
+      )
+        .then(res => {
+          item.keterangan = res.keterangan;
+          item.k_status = 6;
+        })
+        .then(() => {
+          return this.$store.dispatch("artikel/reject", {
+            presensi_manual_id: item.presensi_manual_id,
+            organisasi_id: item.organisasi.no_reg,
+            obj: item
+          });
+        })
+        .then(res => {
+          this.$refs.dlg.resolve();
+          return res;
+        })
+        .catch(e => e);
+    }
+  }
+};
+</script>
+<style>
+.vue-map-container,
+.vue-map-container .vue-map {
+  width: 100%;
+  height: 95%;
+}
+img {
+  max-width: 230px;
+  max-height: 250px;
+}
+</style>

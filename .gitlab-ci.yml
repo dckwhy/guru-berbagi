@@ -1,0 +1,77 @@
+stages:
+  - build
+  - deploy
+
+.build-docker: &build-docker
+  tags:
+    - devel-39
+  stage: build
+  script:
+    - echo "${V_ENV}" > .env  
+    - echo "${V_COMPOSE_FILE}" > docker-compose.yml
+    # build image 
+    - docker-compose -f docker-compose.yml build
+    # push to registry
+    - docker-compose -f docker-compose.yml push
+  variables:
+    V_COMPOSE_FILE: ${COMPOSE_FILE}
+    V_ENV: ${ENV}
+
+.deploy-docker: &deploy-docker
+  stage: deploy
+  script:
+    - curl -X POST ${V_HOOK}
+  variables:
+    V_HOOK: ${HOOK}
+
+
+.build-deploy: &build-deploy
+  stage: build
+  tags:
+    - devel-39
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .cache/
+      - node_modules/
+  script:
+    - mkdir -p dist
+    - mkdir -p .cache
+    - chmod -R 777 .cache
+    - chmod -R 777 dist
+    - echo "${V_ENV}" > .env
+    - docker run -i --rm --user $(id -u):$(id -g) -v $(pwd):/home/node/app -v $(pwd)/.cache:/.cache -w /home/node/app node:14 /bin/bash -c "yarn install;yarn build"
+    - rsync -avz dist/ ${V_SERVER}:${V_FOLDER}/
+  variables:
+    V_SERVER: ${SERVER}
+    V_FOLDER: ${FOLDER}
+    V_ENV: ${ENV}
+    V_SERVER_KEY: ${SERVER_KEY_PRIV}
+
+Build Devel:
+  <<: *build-docker
+  only:
+    - devel
+  environment:
+    name: devel
+
+Deploy Devel:
+  <<: *deploy-docker
+  only:
+    - devel
+  environment:
+    name: devel
+
+Deploy Demo:
+  <<: *build-deploy
+  only:
+    - demo
+  environment:
+    name: demo
+
+Deploy Production:
+  <<: *build-deploy
+  only:
+    - production
+  environment:
+    name: riil

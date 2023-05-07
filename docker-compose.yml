@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    image: docker-hub.siap.id/monev-sv/web-devel:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - './:/app'
+      - /app/node_modules
+    ports:
+      - '8080:8080'

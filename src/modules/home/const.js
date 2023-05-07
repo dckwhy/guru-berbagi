@@ -1,0 +1,17 @@
+export const STATUS_NEW = 12
+export const STATUS_IN_PROGRESS = 13
+export const STATUS_RESOLVED = 14
+export const STATUS_CLOSED = 15
+export const STATUS_REJECTED = 16
+export const STATUS_ACTIVE = 17
+export const STATUS_NON_ACTIVE = 18
+
+export default {
+  STATUS_NEW,
+  STATUS_IN_PROGRESS,
+  STATUS_RESOLVED,
+  STATUS_CLOSED,
+  STATUS_REJECTED,
+  STATUS_ACTIVE,
+  STATUS_NON_ACTIVE,
+}

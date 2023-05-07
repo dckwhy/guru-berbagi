@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="/logo.png" />
+    <title><%= VUE_APP_TITLE %></title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/vue-recaptcha@latest/dist/vue-recaptcha.min.js"></script>
+    <script
+      src="https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit"
+      async
+      defer
+    ></script>
+    <style>
+      [v-cloak] > * {
+        display: none;
+      }
+
+      [v-cloak]::before {
+        content: "loading…";
+      }
+
+      /* @import url('https://fonts.googleapis.com/css?family=Nunito:400,700,900&display=swap');
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to bottom right, #6537b7, #20123a);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      height: 100%;
+    }
+
+    .card-box {
+      background-color: #fff;
+      border-radius: 5px;
+    }
+
+    .bg-kiri {
+      background: #2c2058;
+      background-image: url("https://cdn.siap.id/s3/simpkb/asset%20img/Guru-Berbagi/illustrasi/bg-register1.png");
+      background-repeat: no-repeat;
+      margin: 0 -15px;
+      border-radius: 5px 0 0 0;
+      height: 100%;
+    } */
+    </style>
+  </head>
+
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but edok_web doesn't work properly without JavaScript
+        enabled. Please enable it to continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

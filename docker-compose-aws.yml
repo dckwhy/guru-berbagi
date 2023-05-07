@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  web:
+    image: 022159271696.dkr.ecr.ap-southeast-1.amazonaws.com/monev-sv/web:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-prod
+    ports:
+      - 8080:80
