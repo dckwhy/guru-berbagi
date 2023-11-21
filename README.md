@@ -1,5 +1,9 @@
 # App Web
 
+## Deskripsi
+Guru Berbagi adalah salah satu program Kementerian Pendidikan yang bertujuan untuk mewujudkan kolaborasi antara pemerintah, guru, masyarakat, dan aktivis pendidikan agar bersama-sama menghadapi Covid-19. Pemerintah, guru, masyarakat, dan aktivis pendidikan bekerja sama untuk berbagi ide dan praktik melalui Rencana Pelaksanaan Pembelajaran (RPP) sehingga anak-anak Indonesia dapat belajar dari mana saja.
+Guru Berbagi adalah sistem berbasis web. Sistem ini memiliki fitur untuk berbagi RPP, video, dan artikel. RPP, video, dan artikel dapat dikurasi oleh admin sebelum dipublikasikan agar dapat diakses oleh para guru.
+
 ## Project setup
 ```
 cp .env.example .env
